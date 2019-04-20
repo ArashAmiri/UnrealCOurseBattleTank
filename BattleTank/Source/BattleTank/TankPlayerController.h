@@ -20,4 +20,10 @@ public:
 
 	void BeginPlay() override;
 
+	void Tick(float) override;
+
+private:
+
+	void AimTowardsCrossHair();
+
 };
