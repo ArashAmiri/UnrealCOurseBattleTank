@@ -22,8 +22,18 @@ public:
 
 	void Tick(float) override;
 
+	UPROPERTY(EditAnywhere)
+		float CrossHairXLocation = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+		float CrossHairYLocation = 0.3333f;
+
 private:
 
 	void AimTowardsCrossHair();
+
+	bool GetSightRateHitLocation(FVector &);
+
+	FVector2D FindCrossHairLocationOnScreen();
 
 };
