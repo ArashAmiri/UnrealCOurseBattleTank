@@ -14,9 +14,33 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::AimAt(FVector TargetLocation)
+void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 {
-	UE_LOG(LogTemp, Error, TEXT("Tank %s is aiming at %s "), *GetOwner()->GetName(), *TargetLocation.ToString());
+	if (this->Barrel) {
+
+		FVector OutTossVelocity(0);
+		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+		
+		TArray<AActor *> ActorsToIgnore;
+		ActorsToIgnore.Reset();
+		
+		bool SuccessFullyCalculatedVelocity = UGameplayStatics::SuggestProjectileVelocity(
+			this,
+			OUT OutTossVelocity,
+			StartLocation,
+			TargetLocation,
+			LaunchSpeed,
+			ESuggestProjVelocityTraceOption::DoNotTrace
+		);
+
+
+		if (SuccessFullyCalculatedVelocity) {
+			FVector NormalizedTossVelocity = OutTossVelocity.GetSafeNormal();
+			FString BarrelLocation = this->Barrel->GetComponentLocation().ToString();
+			MoveBarrel(NormalizedTossVelocity);
+		}
+		
+	}
 
 }
 
@@ -29,6 +53,15 @@ void UTankAimingComponent::BeginPlay()
 	
 }
 
+void UTankAimingComponent::MoveBarrel(FVector AimVector)
+{
+	//Rotate the Barrel on X-Y plane to correct X and Y location
+	//Rotate the Barrel on Z plane to correct Z
+	FRotator BarrelRotation = Barrel->GetForwardVector().Rotation();
+	FRotator AimRotation = AimVector.Rotation();
+	FRotator DesiredRotation = BarrelRotation - AimRotation;
+}
+
 
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -36,5 +69,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UTankAimingComponent::SetBarrel(UStaticMeshComponent * BarrelToSet)
+{
+	this->Barrel = BarrelToSet;	
+
 }
 
