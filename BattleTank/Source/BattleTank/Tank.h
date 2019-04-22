@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
 UCLASS()
@@ -15,11 +16,15 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	void AimAt(FVector TargetLocation);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	UTankAimingComponent *TankAimingComponent = nullptr;
+
+private:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

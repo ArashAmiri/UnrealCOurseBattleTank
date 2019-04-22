@@ -2,9 +2,11 @@
 
 #define OUT
 
+#include "TankPlayerController.h"
 #include "Tank.h"
 #include "Engine/World.h"
-#include "TankPlayerController.h"
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
+#include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 
 
 ATank* ATankPlayerController::GetControlledTank() const
@@ -15,9 +17,6 @@ ATank* ATankPlayerController::GetControlledTank() const
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("I have a tank called %s "), *GetControlledTank()->GetName())
-
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -33,34 +32,45 @@ void ATankPlayerController::AimTowardsCrossHair()
 	bool HitSomething = GetSightRateHitLocation(OUT HitLocation);
 		
 	if (HitSomething) {
-		UE_LOG(LogTemp, Warning, TEXT("OutLocation is Something: %s"), *HitLocation.ToString())
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Nothing Hit."))
+		GetControlledTank()->AimAt(HitLocation);
 	}
 }
 
 bool ATankPlayerController::GetSightRateHitLocation(FVector &OutHitLocation)
 {
-	ATank* ControlledTank = GetControlledTank();
+		FVector LookDirection;
+		if (GetLookDirection(OUT LookDirection)) {
 
-	if (ControlledTank) {
+			ATank* ControlledTank = GetControlledTank();
 
-		FVector2D CrossHairLocationOnScreen = FindCrossHairLocationOnScreen();
-		UE_LOG(LogTemp, Error, TEXT("CrossHairLocationOnScreen = %s."), *CrossHairLocationOnScreen.ToString())
+			if (ControlledTank) {
+				TArray<AActor *> AttachedActors;
+				GetAttachedActors(OUT AttachedActors);
 
-		FVector StartLocation = GetControlledTank()->GetActorLocation();
-		FVector EndLocation = GetControlledTank()->GetActorLocation();
+				FVector LineStart = PlayerCameraManager->GetCameraLocation();				
+				FVector LineEnd = LineStart + (LookDirection * LINE_TRACE_RANGE);
 
-		FHitResult HitResult;
-		GetWorld()->LineTraceSingleByChannel(OUT HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility);
-		if (HitResult.GetActor()) {
-			OutHitLocation = HitResult.GetActor()->GetActorLocation();
-			return true;
+				FHitResult HitResult;
+
+				GetWorld()->LineTraceSingleByChannel(OUT HitResult, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
+
+				if (HitResult.GetActor()) {
+					OutHitLocation = HitResult.Location;
+					return true;
+				}
+				else {
+					OutHitLocation = FVector(0);
+				}
+				
+			}
+			else {
+				UE_LOG(LogTemp, Error, TEXT("No controlled tank "));
+
+			}
+
 		}
-	}
+		return false;
 
-	return false;
 }
 
 FVector2D ATankPlayerController::FindCrossHairLocationOnScreen()
@@ -68,11 +78,16 @@ FVector2D ATankPlayerController::FindCrossHairLocationOnScreen()
 	int32 ViewPortSizeX, ViewPortSizeY;
 	GetViewportSize(OUT ViewPortSizeX, OUT ViewPortSizeY);
 
-	UE_LOG(LogTemp, Error, TEXT("ViewPortSizeX = %s. ViewPortSizeY = %s "), *FString::FromInt(ViewPortSizeX), *FString::FromInt(ViewPortSizeY))
-
 	FVector2D Result;
 	Result.X = ViewPortSizeX * CrossHairXLocation;
 	Result.Y = ViewPortSizeY * CrossHairYLocation;
 
 	return Result;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector & LookDirection)
+{
+	FVector2D CrossHairLocationOnScreen = FindCrossHairLocationOnScreen();
+	FVector WorldLocation;
+	return DeprojectScreenPositionToWorld(CrossHairLocationOnScreen.X, CrossHairLocationOnScreen.Y, WorldLocation, OUT LookDirection);
 }
