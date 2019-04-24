@@ -23,7 +23,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
 
 
 protected:
@@ -31,6 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent *TankAimingComponent = nullptr;
+	UTankBarrel *Barrel = nullptr;
 
 private:	
 	// Called every frame

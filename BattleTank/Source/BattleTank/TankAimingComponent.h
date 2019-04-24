@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/Core/Public/Containers/Array.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "TankBarrel.h"
 #include "TankAimingComponent.generated.h"
 
 
@@ -22,14 +23,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetBarrel(UStaticMeshComponent* BarrelToSet);
+	void SetBarrel(UTankBarrel* BarrelToSet);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:
-	UStaticMeshComponent *Barrel = nullptr;
+	UTankBarrel *Barrel = nullptr;
 
 	void MoveBarrel(FVector);
 

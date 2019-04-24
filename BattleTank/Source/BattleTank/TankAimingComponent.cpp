@@ -3,6 +3,7 @@
 
 #include "TankAimingComponent.h"
 
+
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
@@ -55,11 +56,11 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::MoveBarrel(FVector AimVector)
 {
-	//Rotate the Barrel on X-Y plane to correct X and Y location
-	//Rotate the Barrel on Z plane to correct Z
 	FRotator BarrelRotation = Barrel->GetForwardVector().Rotation();
 	FRotator AimRotation = AimVector.Rotation();
 	FRotator DesiredRotation = BarrelRotation - AimRotation;
+
+	Barrel->Elevate(5);
 }
 
 
@@ -71,7 +72,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingComponent::SetBarrel(UStaticMeshComponent * BarrelToSet)
+void UTankAimingComponent::SetBarrel(UTankBarrel * BarrelToSet)
 {
 	this->Barrel = BarrelToSet;	
 

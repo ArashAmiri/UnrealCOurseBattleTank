@@ -10,6 +10,7 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = true;
 
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
+	//Barrel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Barrel"));
 
 }
 
@@ -40,7 +41,7 @@ void ATank::AimAt(FVector TargetLocation)
 
 }
 
-void ATank::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
+void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
 	TankAimingComponent->SetBarrel(BarrelToSet);
 	
