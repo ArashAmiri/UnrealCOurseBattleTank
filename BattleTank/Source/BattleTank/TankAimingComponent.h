@@ -2,13 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "Runtime/Core/Public/Containers/Array.h"
-#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
-#include "TankBarrel.h"
 #include "TankAimingComponent.generated.h"
+
+//forward declarations
+class UTankBarrel;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

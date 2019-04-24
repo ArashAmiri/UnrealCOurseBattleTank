@@ -2,6 +2,12 @@
 
 
 #include "TankAimingComponent.h"
+#include "CoreMinimal.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Core/Public/Containers/Array.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "TankBarrel.h"
+
 
 
 // Sets default values for this component's properties
@@ -31,14 +37,24 @@ void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 			StartLocation,
 			TargetLocation,
 			LaunchSpeed,
+			false,
+			0,
+			0,
 			ESuggestProjVelocityTraceOption::DoNotTrace
 		);
 
+		float TimeSeconds = GetWorld()->GetTimeSeconds();
 
 		if (SuccessFullyCalculatedVelocity) {
 			FVector NormalizedTossVelocity = OutTossVelocity.GetSafeNormal();
 			FString BarrelLocation = this->Barrel->GetComponentLocation().ToString();
+			UE_LOG(LogTemp, Error, TEXT("%f: Aim Solution found."), TimeSeconds)
+
 			MoveBarrel(NormalizedTossVelocity);
+		}
+		else {
+			UE_LOG(LogTemp, Error, TEXT("%f: No Aim Solution found."), TimeSeconds)
+
 		}
 		
 	}

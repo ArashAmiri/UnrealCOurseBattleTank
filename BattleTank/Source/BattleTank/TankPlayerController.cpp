@@ -3,6 +3,10 @@
 #define OUT
 
 #include "TankPlayerController.h"
+#include "CoreMinimal.h"
+#include "Tank.h"
+#include "Engine/World.h"
+#include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 
 
 ATank* ATankPlayerController::GetControlledTank() const
