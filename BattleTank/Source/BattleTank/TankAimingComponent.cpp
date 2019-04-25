@@ -7,6 +7,7 @@
 #include "Runtime/Core/Public/Containers/Array.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 
 
@@ -23,7 +24,7 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 {
-	if (this->Barrel) {
+	if (this->Barrel && this->Turret) {
 
 		FVector OutTossVelocity(0);
 		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -48,13 +49,8 @@ void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 		if (SuccessFullyCalculatedVelocity) {
 			FVector NormalizedTossVelocity = OutTossVelocity.GetSafeNormal();
 			FString BarrelLocation = this->Barrel->GetComponentLocation().ToString();
-			UE_LOG(LogTemp, Error, TEXT("%f: Aim Solution found."), TimeSeconds)
 
 			MoveBarrel(NormalizedTossVelocity);
-		}
-		else {
-			UE_LOG(LogTemp, Error, TEXT("%f: No Aim Solution found."), TimeSeconds)
-
 		}
 		
 	}
@@ -74,9 +70,14 @@ void UTankAimingComponent::MoveBarrel(FVector AimVector)
 {
 	FRotator BarrelRotation = Barrel->GetForwardVector().Rotation();
 	FRotator AimRotation = AimVector.Rotation();
-	FRotator DesiredRotation = BarrelRotation - AimRotation;
 
-	Barrel->Elevate(5);
+	float DesiredPitch = AimRotation.Pitch - BarrelRotation.Pitch;
+	float DesiredYaw = AimRotation.Yaw - BarrelRotation.Yaw;
+
+	UE_LOG(LogTemp, Error, TEXT("Desired Yaw == %f "), DesiredYaw)
+
+	Barrel->Elevate(DesiredPitch);
+	Turret->Rotate(DesiredYaw);
 }
 
 
@@ -92,5 +93,10 @@ void UTankAimingComponent::SetBarrel(UTankBarrel * BarrelToSet)
 {
 	this->Barrel = BarrelToSet;	
 
+}
+
+void UTankAimingComponent::SetTurret(UTankTurret * TurretToSet)
+{
+	this->Turret = TurretToSet;
 }
 
