@@ -16,7 +16,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -66,37 +66,44 @@ void UTankAimingComponent::BeginPlay()
 	
 }
 
+
+
 void UTankAimingComponent::MoveBarrel(FVector AimVector)
 {
 	FRotator BarrelRotation = Barrel->GetForwardVector().Rotation();
 	FRotator AimRotation = AimVector.Rotation();
 
-	float DesiredPitch = AimRotation.Pitch - BarrelRotation.Pitch;
-	float DesiredYaw = AimRotation.Yaw - BarrelRotation.Yaw;
+	auto DeltaRotator = AimRotation - BarrelRotation;
 
-	UE_LOG(LogTemp, Error, TEXT("Desired Yaw == %f "), DesiredYaw)
+	UE_LOG(LogTemp, Warning, TEXT("Yaw is %f"), DeltaRotator.Yaw);
 
-	Barrel->Elevate(DesiredPitch);
-	Turret->Rotate(DesiredYaw);
+	float Yaw = DeltaRotator.Yaw;
+	float Pitch = DeltaRotator.Pitch;
+
+	if (Yaw > 180) {
+		Yaw = 360 - Yaw;
+	}
+	if (Yaw < -180) {
+		Yaw = Yaw + 360;
+	}
+
+	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(Yaw);
 }
 
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
 void UTankAimingComponent::SetBarrel(UTankBarrel * BarrelToSet)
 {
-	this->Barrel = BarrelToSet;	
+	if (BarrelToSet) {
+		this->Barrel = BarrelToSet;
+	}
 
 }
 
 void UTankAimingComponent::SetTurret(UTankTurret * TurretToSet)
 {
-	this->Turret = TurretToSet;
+	if (TurretToSet) {
+		this->Turret = TurretToSet;
+	}
 }
 

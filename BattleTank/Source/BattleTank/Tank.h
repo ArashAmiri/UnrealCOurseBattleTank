@@ -21,7 +21,7 @@ public:
 	void AimAt(FVector TargetLocation);
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 10000;
+	float LaunchSpeed = 5000;
 
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
