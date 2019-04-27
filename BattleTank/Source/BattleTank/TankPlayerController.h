@@ -22,13 +22,13 @@ public:
 
 	void Tick(float) override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		float CrossHairXLocation = 0.5f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		float CrossHairYLocation = 0.3333f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		int LINE_TRACE_RANGE = 1500000;
 
 private:

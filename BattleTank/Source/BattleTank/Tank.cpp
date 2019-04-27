@@ -42,6 +42,7 @@ void ATank::AimAt(FVector TargetLocation)
 
 void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
+	UE_LOG(LogTemp, Error, TEXT("Setting Barrel %s for Tank %s"), *BarrelToSet->GetName(), *GetName())
 	TankAimingComponent->SetBarrel(BarrelToSet);
 	this->Barrel = BarrelToSet;
 	
@@ -52,18 +53,29 @@ void ATank::SetTurretReference(UTankTurret * TurretToSet)
 	TankAimingComponent->SetTurret(TurretToSet);
 }
 
+void ATank::setTankTrackLeftReference(UTankTrack * TankTrackToSet)
+{
+	this->TankTrackLeft = TankTrackToSet;
+}
+
+void ATank::setTankTrackRightReference(UTankTrack * TankTrackToSet)
+{
+	this->TankTrackRight = TankTrackToSet;
+}
+
 void ATank::Fire()
 {
-	if (!this->Barrel) {
-		return;
+	bool isReloaded = GetWorld()->GetRealTimeSeconds() - ReloadTimeInSeconds > LastFireTime;
+
+	if (Barrel && isReloaded) {
+		FName PROJECTILE_SOCKET_NAME = FName("Projectile");
+		FVector SocketLocation = Barrel->GetSocketLocation(PROJECTILE_SOCKET_NAME);
+		FRotator SocketRotation = Barrel->GetSocketRotation(PROJECTILE_SOCKET_NAME);
+		auto *Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileToSpawn, SocketLocation, SocketRotation);
+		Projectile->Launch(LaunchSpeed);
+		LastFireTime = GetWorld()->GetRealTimeSeconds();
 	}
 
-
-	FName PROJECTILE_SOCKET_NAME = FName("Projectile");
-	FVector SocketLocation = Barrel->GetSocketLocation(PROJECTILE_SOCKET_NAME);
-	FRotator SocketRotation = Barrel->GetSocketRotation(PROJECTILE_SOCKET_NAME);
-	auto *Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileToSpawn, SocketLocation, SocketRotation);
-	Projectile->Launch(LaunchSpeed);
 
 
 

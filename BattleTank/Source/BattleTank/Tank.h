@@ -8,6 +8,7 @@
 class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
+class UTankTrack;
 class AProjectile;
 
 UCLASS()
@@ -21,10 +22,10 @@ public:
 
 	void AimAt(FVector TargetLocation);
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 5000;
 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileToSpawn;
 
 	//************ FUNCTIONS **********************
@@ -34,6 +35,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* TurretToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void setTankTrackLeftReference(UTankTrack* TankTrackToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void setTankTrackRightReference(UTankTrack* TankTrackToSet);
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
@@ -52,5 +59,10 @@ private:
 
 	UTankAimingComponent *TankAimingComponent = nullptr;
 	UTankBarrel *Barrel = nullptr;
+	UTankTrack *TankTrackLeft;
+	UTankTrack *TankTrackRight;
+
+	float ReloadTimeInSeconds = 3;
+	float LastFireTime = 0;
 
 };

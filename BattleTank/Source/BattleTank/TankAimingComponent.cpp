@@ -24,14 +24,14 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 {
-	if (this->Barrel && this->Turret) {
+	if (Barrel && Turret) {
 
 		FVector OutTossVelocity(0);
 		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-		
+
 		TArray<AActor *> ActorsToIgnore;
 		ActorsToIgnore.Reset();
-		
+
 		bool SuccessFullyCalculatedVelocity = UGameplayStatics::SuggestProjectileVelocity(
 			this,
 			OUT OutTossVelocity,
@@ -52,8 +52,9 @@ void UTankAimingComponent::AimAt(FVector TargetLocation, float LaunchSpeed)
 
 			MoveBarrel(NormalizedTossVelocity);
 		}
-		
 	}
+		
+	
 
 }
 
