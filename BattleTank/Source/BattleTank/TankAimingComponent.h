@@ -20,8 +20,7 @@ public:
 	UTankAimingComponent();
 	void AimAt(FVector, float Speed);
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
 	void SetBarrel(UTankBarrel* BarrelToSet);
 	void SetTurret(UTankTurret* TurretToSet);
 

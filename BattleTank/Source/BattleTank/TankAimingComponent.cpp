@@ -75,7 +75,6 @@ void UTankAimingComponent::MoveBarrel(FVector AimVector)
 
 	auto DeltaRotator = AimRotation - BarrelRotation;
 
-	UE_LOG(LogTemp, Warning, TEXT("Yaw is %f"), DeltaRotator.Yaw);
 
 	float Yaw = DeltaRotator.Yaw;
 	float Pitch = DeltaRotator.Pitch;
