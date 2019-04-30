@@ -7,6 +7,7 @@
 #include "TankAimingComponent.h"
 #include "Projectile.h"
 #include "Engine/World.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -16,6 +17,8 @@ ATank::ATank()
 
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 	//Barrel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Barrel"));
+
+	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Tank Movement Component"));
 
 }
 
@@ -42,7 +45,6 @@ void ATank::AimAt(FVector TargetLocation)
 
 void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
-	UE_LOG(LogTemp, Error, TEXT("Setting Barrel %s for Tank %s"), *BarrelToSet->GetName(), *GetName())
 	TankAimingComponent->SetBarrel(BarrelToSet);
 	this->Barrel = BarrelToSet;
 	

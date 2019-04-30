@@ -6,6 +6,7 @@
 #include "Tank.generated.h"
 
 class UTankAimingComponent;
+class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class UTankTrack;
@@ -50,6 +51,10 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UTankAimingComponent *TankAimingComponent = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent *TankMovementComponent = nullptr;
 
 
 private:	
@@ -57,7 +62,6 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UTankAimingComponent *TankAimingComponent = nullptr;
 	UTankBarrel *Barrel = nullptr;
 	UTankTrack *TankTrackLeft;
 	UTankTrack *TankTrackRight;
