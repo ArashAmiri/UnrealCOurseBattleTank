@@ -2,10 +2,30 @@
 
 
 #include "TankMovementComponent.h"
+#include "TankTrack.h"
 
 
 void UTankMovementComponent::IntentMoveForward(float Throw) {
-	UE_LOG(LogTemp, Warning, TEXT("Intent Movement with throw %f"), Throw);
+	if (!LeftTrack || !RightTrack) {
+		return;
+	}
+	this->LeftTrack->SetThrottle(Throw);
+	this->RightTrack->SetThrottle(Throw);
 
+}
+
+void UTankMovementComponent::IntentTurnRight(float Throw)
+{
+	if (!LeftTrack || !RightTrack) {
+		return;
+	}
+	this->LeftTrack->SetThrottle(Throw);
+	this->RightTrack->SetThrottle(-Throw);
+}
+
+void UTankMovementComponent::initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet) {
+
+	this->LeftTrack = LeftTrackToSet;
+	this->RightTrack = RightTrackToSet;
 }
 

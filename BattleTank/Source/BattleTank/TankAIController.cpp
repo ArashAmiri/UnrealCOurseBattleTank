@@ -21,9 +21,6 @@ void ATankAIController::Tick(float DeltaTime)
 		ControlledTank->AimAt(PlayerTank->GetActorLocation());
 		ControlledTank->Fire();
 	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("No player tank found. "));
-	}
 	
 }
 

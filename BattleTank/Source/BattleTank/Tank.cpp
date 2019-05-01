@@ -18,8 +18,6 @@ ATank::ATank()
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 	//Barrel = CreateDefaultSubobject<UStaticMeshComponent>(FName("Barrel"));
 
-	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Tank Movement Component"));
-
 }
 
 // Called when the game starts or when spawned
